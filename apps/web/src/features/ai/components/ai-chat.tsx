@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useRef, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { Send, Loader2, Bot, User, AlertCircle, RefreshCcw } from 'lucide-react';
@@ -16,9 +18,11 @@ export const AiChat: React.FC<AiChatProps> = ({ chatId }) => {
     regenerate,
   } = useChat({
     // Optional: api isn't valid if the new sdk removed it or we can pass it if it still exists. Let's just omit if it complains, wait it did complain earlier:
-    // "Object literal may only specify known properties, and 'api' does not exist in type 'UseChatOptions'"
-    // So we don't pass `api`. The new SDK might use a global provider or it's handled differently. We'll pass `id`.
+    api: process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/ai/chat` : 'http://localhost:4000/api/ai/chat',
     id: chatId,
+    headers: {
+      Authorization: typeof window !== 'undefined' ? `Bearer ${localStorage.getItem('accessToken')}` : ''
+    }
   } as any);
 
   const [input, setInput] = useState('');

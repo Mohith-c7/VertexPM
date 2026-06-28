@@ -7,6 +7,7 @@ import { workItemsRoutes } from "./modules/workitems/workitems.routes";
 import { commentsRoutes } from "./modules/comments/comments.routes";
 import { attachmentsRoutes } from "./modules/attachments/attachments.routes";
 import { activityRoutes } from "./modules/activity/activity.routes";
+import { aiContextRoutes } from "./modules/ai/context/context.routes";
 
 import { realtimeSyncPlugin } from "./modules/realtime-sync/realtime.plugin";
 
@@ -25,6 +26,7 @@ export function buildApp(): FastifyInstance {
   app.register(commentsRoutes, { prefix: "/api" });
   app.register(attachmentsRoutes, { prefix: "/api" });
   app.register(activityRoutes, { prefix: "/api" });
+  app.register(aiContextRoutes, { prefix: "/api/ai" });
 
   return app;
 }
