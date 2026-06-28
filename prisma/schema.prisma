@@ -23,6 +23,8 @@ model User {
   refreshTokens    RefreshToken[]
   ownedWorkspaces  Workspace[]       @relation("WorkspaceOwner")
   workspaceMembers WorkspaceMember[]
+  ownedProjects    Project[]         @relation("ProjectOwner")
+  createdBoards    Board[]           @relation("BoardCreator")
 }
 
 model RefreshToken {
@@ -53,6 +55,7 @@ model Workspace {
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
   members     WorkspaceMember[]
+  projects    Project[]
 }
 
 model WorkspaceMember {
@@ -66,4 +69,77 @@ model WorkspaceMember {
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([workspaceId, userId])
+}
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  workspaceId String
+  name        String
+  key         String
+  description String?
+  icon        String?
+  color       String?
+  status      ProjectStatus @default(ACTIVE)
+  ownerId     String
+  isArchived  Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deletedAt   DateTime?
+
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  owner       User          @relation("ProjectOwner", fields: [ownerId], references: [id])
+  boards      Board[]
+
+  @@unique([workspaceId, key])
+}
+
+enum BoardType {
+  KANBAN
+  SCRUM
+  PERSONAL
+}
+
+enum Visibility {
+  PRIVATE
+  WORKSPACE
+}
+
+model Board {
+  id          String     @id @default(uuid())
+  projectId   String
+  name        String
+  description String?
+  icon        String?
+  color       String?
+  boardType   BoardType  @default(KANBAN)
+  visibility  Visibility @default(WORKSPACE)
+  isArchived  Boolean    @default(false)
+  position    Int        @default(0)
+  createdById String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
+
+  project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy   User       @relation("BoardCreator", fields: [createdById], references: [id])
+  columns     Column[]
+}
+
+model Column {
+  id                String   @id @default(uuid())
+  boardId           String
+  name              String
+  description       String?
+  color             String?
+  position          Int
+  wipLimit          Int?
+  isCompletedColumn Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  board             Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
 }

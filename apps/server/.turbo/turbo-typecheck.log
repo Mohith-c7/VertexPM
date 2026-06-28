@@ -1,0 +1,4 @@
+
+> server@1.0.0 typecheck D:\VertexPM\apps\server
+> tsc --noEmit -p tsconfig.json
+
