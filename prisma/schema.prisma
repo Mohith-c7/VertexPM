@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
@@ -34,6 +35,10 @@ model User {
   activityLogs        ActivityLog[]  @relation("ActivityActor")
   mentionsReceived    Mention[]      @relation("CommentMention")
   aiConversations     AiConversation[] @relation("UserAiConversations")
+  searchHistories     SearchHistory[]
+  savedSearches       SavedSearch[]
+  savedFilters        SavedFilter[]
+  savedViews          SavedView[]
 }
 
 model RefreshToken {
@@ -66,6 +71,10 @@ model Workspace {
   members     WorkspaceMember[]
   projects    Project[]
   aiConversations AiConversation[]
+  searchHistories SearchHistory[]
+  savedSearches   SavedSearch[]
+  savedFilters    SavedFilter[]
+  savedViews      SavedView[]
 }
 
 model WorkspaceMember {
@@ -354,3 +363,62 @@ model AiMessage {
   
   conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }
+
+model SearchHistory {
+  id          String   @id @default(uuid())
+  userId      String
+  workspaceId String
+  query       String
+  filters     String?  // JSON stringified filters
+  createdAt   DateTime @default(now())
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model SavedSearch {
+  id          String   @id @default(uuid())
+  userId      String
+  workspaceId String
+  name        String
+  query       String
+  entityTypes String?  // JSON array
+  isFavorite  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model SavedFilter {
+  id          String   @id @default(uuid())
+  userId      String
+  workspaceId String
+  name        String
+  filterState String   // JSON stringified filter rules
+  isFavorite  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model SavedView {
+  id          String   @id @default(uuid())
+  userId      String
+  workspaceId String
+  name        String
+  filterState String?  // JSON stringified filter rules
+  sortState   String?  // JSON stringified sort rules
+  columns     String?  // JSON stringified columns
+  isFavorite  Boolean  @default(false)
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+

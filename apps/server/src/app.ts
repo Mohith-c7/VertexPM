@@ -10,6 +10,8 @@ import { activityRoutes } from "./modules/activity/activity.routes";
 import { aiContextRoutes } from "./modules/ai/context/context.routes";
 import { intelligenceRoutes } from "./modules/ai/intelligence/intelligence.routes";
 import { skillsRoutes } from "./modules/ai/skills/skills.routes";
+import { searchRoutes } from "./modules/search/search.routes";
+import { filterRoutes } from "./modules/filter/filter.routes";
 
 import { realtimeSyncPlugin } from "./modules/realtime-sync/realtime.plugin";
 
@@ -31,6 +33,8 @@ export function buildApp(): FastifyInstance {
   app.register(aiContextRoutes, { prefix: "/api/ai" });
   app.register(intelligenceRoutes, { prefix: "/api/ai" });
   app.register(skillsRoutes, { prefix: "/api/ai/skills" });
+  app.register(searchRoutes, { prefix: "/api/search" });
+  app.register(filterRoutes, { prefix: "/api/filters" });
 
   return app;
 }

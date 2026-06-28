@@ -7,3 +7,5 @@ export * from "./collaboration.schemas.js";
 export * from "./workitem.schemas.js";
 export * from "./ai-skills.schemas.js";
 export * from "./intelligence.schemas.js";
+export * from "./search.schemas.js";
+export * from "./filter.schemas.js";
