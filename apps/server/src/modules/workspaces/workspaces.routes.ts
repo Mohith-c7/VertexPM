@@ -10,6 +10,7 @@ import {
   removeMemberHandler
 } from "./workspaces.controller";
 import { requireAuth } from "../../middleware/auth.middleware";
+import { getProjectsHandler } from "../projects/projects.controller";
 
 export async function workspacesRoutes(app: FastifyInstance) {
   app.addHook("preHandler", requireAuth as any);
@@ -23,4 +24,6 @@ export async function workspacesRoutes(app: FastifyInstance) {
   app.get("/:id/members", getMembersHandler);
   app.post("/:id/members", addMemberHandler);
   app.delete("/:id/members/:memberId", removeMemberHandler);
+
+  app.get("/:workspaceId/projects", getProjectsHandler);
 }

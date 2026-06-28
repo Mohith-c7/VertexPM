@@ -7,16 +7,21 @@ export class ProjectsRepository {
     });
   }
 
-  async findProjects(workspaceId: string, filters: any = {}, page: number = 1, limit: number = 10) {
+  async findProjects(workspaceId: string, filters: any = {}, page: number = 1, limit: number = 20, search?: string, sortBy: string = 'createdAt', sortOrder: string = 'desc') {
     const skip = (page - 1) * limit;
     
+    const where: any = { workspaceId, ...filters };
+    if (search) {
+      where.name = { contains: search, mode: 'insensitive' };
+    }
+
     return db.$transaction([
-      db.project.count({ where: { workspaceId, ...filters } }),
+      db.project.count({ where }),
       db.project.findMany({
-        where: { workspaceId, ...filters },
+        where,
         skip,
         take: limit,
-        orderBy: { createdAt: 'desc' }
+        orderBy: { [sortBy]: sortOrder }
       })
     ]);
   }

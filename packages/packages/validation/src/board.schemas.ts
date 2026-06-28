@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const createBoardSchema = z.object({
   name: z.string().min(1).max(100),
-  description: z.string().max(500).optional(),
+  description: z.string().max(1000).optional(),
   icon: z.string().optional(),
   color: z.string().optional(),
   boardType: z.enum(['KANBAN', 'SCRUM', 'PERSONAL']).optional(),
@@ -11,7 +11,7 @@ export const createBoardSchema = z.object({
 
 export const updateBoardSchema = z.object({
   name: z.string().min(1).max(100).optional(),
-  description: z.string().max(500).optional(),
+  description: z.string().max(1000).optional(),
   icon: z.string().optional(),
   color: z.string().optional(),
   boardType: z.enum(['KANBAN', 'SCRUM', 'PERSONAL']).optional(),

@@ -40,21 +40,35 @@ export class ProjectsService {
     return project;
   }
 
-  async getProjects(query: GetProjectsQueryInput, userId: string) {
-    await this.checkWorkspaceAccess(query.workspaceId, userId);
+  async getProjects(query: GetProjectsQueryInput, userId: string, workspaceIdParam?: string) {
+    const workspaceId = workspaceIdParam || query.workspaceId;
+    if (!workspaceId) throw new Error("Workspace ID is required");
+
+    await this.checkWorkspaceAccess(workspaceId, userId);
     
     const filters: any = { deletedAt: null };
     if (query.status) filters.status = query.status;
     if (query.isArchived !== undefined) filters.isArchived = query.isArchived;
 
-    const [total, projects] = await repository.findProjects(query.workspaceId, filters, query.page, query.limit);
+    const limit = query.limit || 20;
+
+    const [total, projects] = await repository.findProjects(
+      workspaceId, 
+      filters, 
+      query.page, 
+      limit,
+      query.search,
+      query.sortBy,
+      query.sortOrder
+    );
+
     return {
       data: projects,
       meta: {
         total,
-        page: query.page,
-        limit: query.limit,
-        totalPages: Math.ceil(total / (query.limit || 10)),
+        page: query.page || 1,
+        limit,
+        totalPages: Math.ceil(total / limit),
       }
     };
   }

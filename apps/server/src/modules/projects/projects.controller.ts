@@ -27,7 +27,8 @@ export async function createProjectHandler(req: FastifyRequest, reply: FastifyRe
 export async function getProjectsHandler(req: FastifyRequest, reply: FastifyReply) {
   try {
     const query = getProjectsQuerySchema.parse(req.query);
-    const result = await service.getProjects(query, (req as any).user.id);
+    const workspaceIdParam = (req.params as any).workspaceId;
+    const result = await service.getProjects(query, (req as any).user.id, workspaceIdParam);
     return reply.status(200).send(successResponse("Projects fetched successfully", result));
   } catch (error: any) {
     if (error.message === "Unauthorized") return reply.status(403).send(errorResponse("Unauthorized", "FORBIDDEN"));
