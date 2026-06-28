@@ -1,0 +1,100 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.drawer {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  box-shadow: -4px 0 24px rgba(15, 23, 42, 0.15);
+  display: flex;
+  flex-direction: column;
+  outline: none;
+  animation: slideIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 14px;
+  right: 180px; /* offset slightly to not overlap header buttons, or let's place it inside the header if we want, or place it absolute on the far right */
+  display: none; /* Hide and let the Header and backBtn/closeBtn handle it, or position it nicely */
+}
+
+/* Wait, let's place the close button inside the header, or let's position it on the far top-right */
+.closeBtn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  display: none; /* We can use custom close mechanisms or we can show it outside. Actually, keeping it as none is clean, but let's make it display in mobile as a floating back button if needed, or let's just make it visible on mobile and desktop as a floating close button */
+}
+
+/* We don't need a separate floating close btn because we have Back arrow in preferences, and clicking backdrop closes drawer. But let's add a close button inside the notification center header if they want, or keep a small close button at the top right of the drawer */
+.closeBtn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #64748b;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: background 0.12s ease, color 0.12s ease, transform 0.1s ease;
+}
+
+.closeBtn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.closeBtn:active {
+  transform: scale(0.95);
+}
+
+.closeBtn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.content {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@media (max-width: 640px) {
+  .drawer {
+    max-width: 100%;
+  }
+}

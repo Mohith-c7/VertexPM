@@ -8,6 +8,7 @@ dist
 build
 out
 coverage
+.turbo
 
 # Environment files
 .env

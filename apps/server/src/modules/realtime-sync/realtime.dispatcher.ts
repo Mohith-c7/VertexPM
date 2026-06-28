@@ -49,11 +49,13 @@ export class RealtimeDispatcher {
 
   private resolveRoom(event: RealtimeEvent): string | null {
     // Only broadcast to the smallest room necessary
+    if (event.recipientId) return `user:${event.recipientId}`;
     if (event.boardId) return `board:${event.boardId}`;
     if (event.projectId) return `project:${event.projectId}`;
     if (event.workspaceId) return `workspace:${event.workspaceId}`;
     return null;
   }
+
 }
 
 export const realtimeDispatcher = RealtimeDispatcher.getInstance();

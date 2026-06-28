@@ -12,8 +12,13 @@ import { intelligenceRoutes } from "./modules/ai/intelligence/intelligence.route
 import { skillsRoutes } from "./modules/ai/skills/skills.routes";
 import { searchRoutes } from "./modules/search/search.routes";
 import { filterRoutes } from "./modules/filter/filter.routes";
+import { notificationsRoutes } from "./modules/notifications/notifications.routes";
+import { automationRoutes } from "./modules/automation/automation.routes";
 
 import { realtimeSyncPlugin } from "./modules/realtime-sync/realtime.plugin";
+import { automationEngine } from "./modules/automation/engine/automation.engine";
+import { schedulerEngine } from "./modules/automation/scheduler/scheduler.engine";
+
 
 export function buildApp(): FastifyInstance {
   const app = fastify({ logger: true });
@@ -35,6 +40,16 @@ export function buildApp(): FastifyInstance {
   app.register(skillsRoutes, { prefix: "/api/ai/skills" });
   app.register(searchRoutes, { prefix: "/api/search" });
   app.register(filterRoutes, { prefix: "/api/filters" });
+  app.register(notificationsRoutes, { prefix: "/api/notifications" });
+  app.register(automationRoutes, { prefix: "/api/automation" });
+
+  // Start automation and scheduler engines
+  automationEngine.start();
+  schedulerEngine.start();
+
+  app.addHook("onClose", async () => {
+    schedulerEngine.stop();
+  });
 
   return app;
 }

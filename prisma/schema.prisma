@@ -3,11 +3,12 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["fullTextSearchPostgres"]
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -39,6 +40,12 @@ model User {
   savedSearches       SavedSearch[]
   savedFilters        SavedFilter[]
   savedViews          SavedView[]
+  
+  notificationsReceived Notification[] @relation("NotificationRecipient")
+  notificationsTriggered Notification[] @relation("NotificationActor")
+  notificationPreferences NotificationPreference[] @relation("UserNotificationPreferences")
+  automationRules       AutomationRule[] @relation("RuleCreator")
+  reminders             Reminder[]       @relation("UserReminders")
 }
 
 model RefreshToken {
@@ -75,6 +82,9 @@ model Workspace {
   savedSearches   SavedSearch[]
   savedFilters    SavedFilter[]
   savedViews      SavedView[]
+  
+  notificationPreferences NotificationPreference[]
+  automationRules         AutomationRule[]
 }
 
 model WorkspaceMember {
@@ -112,6 +122,9 @@ model Project {
   workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   owner       User          @relation("ProjectOwner", fields: [ownerId], references: [id])
   boards      Board[]
+  
+  notificationPreferences NotificationPreference[]
+  automationRules         AutomationRule[]
 
   @@unique([workspaceId, key])
 }
@@ -422,3 +435,143 @@ model SavedView {
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 }
 
+// Notifications
+enum NotificationType {
+  ASSIGNMENT
+  MENTION
+  COMMENT
+  REPLY
+  STATUS_CHANGE
+  PRIORITY_CHANGE
+  DUE_DATE
+  REMINDER
+  BOARD_UPDATE
+  PROJECT_UPDATE
+  WORKSPACE_UPDATE
+  SYSTEM
+  AI
+  AUTOMATION
+  SECURITY
+}
+
+enum NotificationSeverity {
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
+enum NotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  recipientId String
+  actorId     String?
+  entityId    String
+  entityType  String
+  type        NotificationType
+  category    String
+  title       String
+  body        String
+  severity    NotificationSeverity @default(INFO)
+  priority    NotificationPriority @default(NORMAL)
+  isRead      Boolean  @default(false)
+  readAt      DateTime?
+  isArchived  Boolean  @default(false)
+  archivedAt  DateTime?
+  metadata    String?  // JSON
+  createdAt   DateTime @default(now())
+
+  recipient   User     @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  actor       User?    @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+}
+
+model NotificationPreference {
+  id          String   @id @default(uuid())
+  userId      String
+  workspaceId String?
+  projectId   String?
+  types       String   // JSON array of NotificationType
+  channels    String   // JSON array of enabled channels e.g. ["IN_APP", "BROWSER"]
+  quietHours  String?  // JSON
+  digestFreq  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User      @relation("UserNotificationPreferences", fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  project     Project?   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, workspaceId, projectId])
+}
+
+// Scheduler & Automation
+model AutomationRule {
+  id          String   @id @default(uuid())
+  workspaceId String
+  projectId   String?
+  name        String
+  description String?
+  triggerType String
+  triggerConfig String? // JSON
+  conditions  String?   // JSON
+  actions     String    // JSON
+  isEnabled   Boolean  @default(true)
+  createdById String
+  lastRunAt   DateTime?
+  nextRunAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  project     Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy   User      @relation("RuleCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  executionLogs ExecutionLog[]
+}
+
+model ExecutionLog {
+  id          String   @id @default(uuid())
+  ruleId      String
+  triggerType String
+  status      String   // SUCCESS, FAILED, RETRY
+  durationMs  Int?
+  actionsRun  Int      @default(0)
+  failureReason String?
+  retryCount  Int      @default(0)
+  executedAt  DateTime @default(now())
+
+  rule        AutomationRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+}
+
+model ScheduledJob {
+  id          String   @id @default(uuid())
+  jobType     String
+  payload     String?  // JSON
+  status      String   // PENDING, RUNNING, COMPLETED, FAILED
+  nextRunAt   DateTime
+  lastRunAt   DateTime?
+  retryCount  Int      @default(0)
+  maxRetries  Int      @default(3)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Reminder {
+  id          String   @id @default(uuid())
+  userId      String
+  entityId    String?
+  entityType  String?
+  type        String   // DUE_TODAY, OVERDUE, CUSTOM
+  message     String
+  remindAt    DateTime
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation("UserReminders", fields: [userId], references: [id], onDelete: Cascade)
+}

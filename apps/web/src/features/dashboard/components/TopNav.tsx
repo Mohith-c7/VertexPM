@@ -1,7 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { Search, Bell, Menu, User } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Search, Menu, User } from "lucide-react";
+import { NotificationBell } from "@/features/notifications/components/notification-bell/NotificationBell";
+import { NotificationDrawer } from "@/features/notifications/components/notification-drawer/NotificationDrawer";
+import { useNotifications } from "@/features/notifications/hooks/use-notifications";
+import { useNotificationCenter } from "@/features/notifications/hooks/use-notification-center";
+import { useNotificationSocket } from "@/features/notifications/hooks/use-notification-socket";
+import { useBrowserNotifications } from "@/features/notifications/hooks/use-browser-notifications";
 
 interface TopNavProps {
   toggleSidebar: () => void;
@@ -9,6 +15,50 @@ interface TopNavProps {
 
 export function TopNav({ toggleSidebar }: TopNavProps) {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [hasNewNotifications, setHasNewNotifications] = useState(false);
+
+  const {
+    notifications,
+    unreadCount,
+    filters,
+    isLoading,
+    isLoadingMore,
+    hasMore,
+    error,
+    updateFilters,
+    loadMore,
+    markRead,
+    markAllRead,
+    archive,
+    remove,
+    addNotification,
+    refreshUnreadCount,
+  } = useNotifications();
+
+  const {
+    isOpen,
+    activePanel,
+    open,
+    close,
+    toggle,
+    setActivePanel,
+  } = useNotificationCenter();
+
+  const { showBrowserNotification } = useBrowserNotifications();
+
+  useNotificationSocket({
+    onNotificationCreated: (notification) => {
+      addNotification(notification);
+      showBrowserNotification(notification);
+      setHasNewNotifications(true);
+    },
+    onCountUpdated: refreshUnreadCount,
+  });
+
+  const handleBellClick = () => {
+    toggle();
+    setHasNewNotifications(false);
+  };
 
   return (
     <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4">
@@ -37,10 +87,11 @@ export function TopNav({ toggleSidebar }: TopNavProps) {
         </div>
 
         {/* Notifications */}
-        <button className="relative text-gray-500 hover:text-gray-900 transition-colors p-2 rounded-full hover:bg-gray-100">
-          <Bell className="h-5 w-5" />
-          <span className="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-blue-600 ring-2 ring-white" />
-        </button>
+        <NotificationBell
+          unreadCount={unreadCount}
+          onClick={handleBellClick}
+          hasNew={hasNewNotifications}
+        />
 
         {/* User Dropdown */}
         <div className="relative">
@@ -67,6 +118,26 @@ export function TopNav({ toggleSidebar }: TopNavProps) {
           )}
         </div>
       </div>
+
+      <NotificationDrawer
+        isOpen={isOpen}
+        onClose={close}
+        activePanel={activePanel}
+        setActivePanel={setActivePanel}
+        notifications={notifications}
+        unreadCount={unreadCount}
+        filters={filters}
+        isLoading={isLoading}
+        isLoadingMore={isLoadingMore}
+        hasMore={hasMore}
+        error={error}
+        onUpdateFilters={updateFilters}
+        onLoadMore={loadMore}
+        onMarkRead={markRead}
+        onMarkAllRead={markAllRead}
+        onArchive={archive}
+        onDelete={remove}
+      />
     </header>
   );
 }

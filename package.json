@@ -20,12 +20,12 @@
     "@next/eslint-plugin-next": "16.2.9",
     "eslint": "^9.16.0",
     "prettier": "^3.5.3",
-    "prisma": "^7.8.0",
+    "prisma": "^5.20.0",
     "turbo": "^2.10.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.19.0"
   },
   "dependencies": {
-    "@prisma/client": "^7.8.0"
+    "@prisma/client": "^5.20.0"
   }
 }

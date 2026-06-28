@@ -9,6 +9,7 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  Zap,
 } from "lucide-react";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
@@ -23,6 +24,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Boards", href: "/boards", icon: KanbanSquare },
+    { name: "Automation", href: "/settings/automation", icon: Zap },
     { name: "Settings", href: "/settings", icon: Settings },
   ];
 

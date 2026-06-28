@@ -6,7 +6,9 @@ export const RealtimeEventSchema = z.object({
   workspaceId: z.string().optional(),
   projectId: z.string().optional(),
   boardId: z.string().optional(),
+  recipientId: z.string().optional(),
   entityId: z.string().optional(),
+
   actor: z.object({
     id: z.string(),
     name: z.string().optional(),

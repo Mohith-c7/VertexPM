@@ -29,9 +29,15 @@ export const realtimeSyncPlugin = fp(async (app: FastifyInstance) => {
   });
 
   io.on("connection", (socket) => {
+    const userId = socket.data.userId;
+    if (userId) {
+      socket.join(`user:${userId}`);
+    }
+
     // Room subscription based on permissions
     // Assuming clients emit 'join' with the room they want to join
     socket.on("join", (room: string) => {
+
       // Future: Add real permission checking here (e.g. check if user can access this board/project/workspace)
       socket.join(room);
     });

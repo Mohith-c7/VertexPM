@@ -9,3 +9,5 @@ export * from "./ai-skills.schemas.js";
 export * from "./intelligence.schemas.js";
 export * from "./search.schemas.js";
 export * from "./filter.schemas.js";
+export * from "./notification.schemas.js";
+export * from "./automation.schemas.js";
