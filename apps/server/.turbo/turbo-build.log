@@ -1,0 +1,4 @@
+
+> server@1.0.0 build D:\VertexPM\apps\server
+> tsc -p tsconfig.json
+

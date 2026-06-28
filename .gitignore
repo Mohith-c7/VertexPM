@@ -1,0 +1,29 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+.next
+dist
+build
+out
+coverage
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Prisma
+prisma/generated
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# Editor and OS junk
+.vscode-test
+.DS_Store
+Thumbs.db
+.idea

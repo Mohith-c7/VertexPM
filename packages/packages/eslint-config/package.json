@@ -1,0 +1,11 @@
+{
+  "name": "@vertexpm/eslint-config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./base": "./base.js",
+    "./nextjs": "./nextjs.js",
+    "./node": "./node.js"
+  }
+}
