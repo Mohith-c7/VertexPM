@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { WorkItem } from '../types';
 import { Button } from '@/components/ui/button';
-
+import { AiInlineEditor } from '../../ai/components/ai-inline-editor';
 export const WorkItemDetails = ({ workItem }: { workItem: WorkItem | null }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [desc, setDesc] = useState(workItem?.description || '');
@@ -25,11 +25,11 @@ export const WorkItemDetails = ({ workItem }: { workItem: WorkItem | null }) => 
         
         {isEditing ? (
           <div className="space-y-3">
-            <textarea
-              className="w-full min-h-[200px] p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono text-slate-800"
+            <AiInlineEditor
               value={desc}
-              onChange={(e) => setDesc(e.target.value)}
+              onChange={setDesc}
               placeholder="Add a description..."
+              className="font-mono text-slate-800"
             />
             <div className="flex space-x-2">
               <Button onClick={handleSave}>Save</Button>

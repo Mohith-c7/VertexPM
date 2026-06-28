@@ -9,3 +9,5 @@ export * from './config';
 export * from './dto';
 export * from './utils';
 export * from './types';
+export * from './intelligence';
+export * from './skills';

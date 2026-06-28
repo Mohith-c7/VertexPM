@@ -1,5 +1,6 @@
 import React from 'react';
 import { Search, Filter, Plus, ListFilter, SlidersHorizontal } from 'lucide-react';
+import { AiActionButton } from '../../ai/components/ai-action-button';
 
 export const BoardToolbar: React.FC = () => {
   return (
@@ -30,6 +31,12 @@ export const BoardToolbar: React.FC = () => {
           <SlidersHorizontal className="w-4 h-4" />
           Display
         </button>
+        <AiActionButton 
+          action="generate-workitem" 
+          context="Current sprint planning" 
+          label="Auto-generate" 
+          onSuccess={(res) => console.log('Generated:', res)} 
+        />
         <button className="flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-slate-950">
           <Plus className="w-4 h-4" />
           New Issue

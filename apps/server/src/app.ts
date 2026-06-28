@@ -8,6 +8,8 @@ import { commentsRoutes } from "./modules/comments/comments.routes";
 import { attachmentsRoutes } from "./modules/attachments/attachments.routes";
 import { activityRoutes } from "./modules/activity/activity.routes";
 import { aiContextRoutes } from "./modules/ai/context/context.routes";
+import { intelligenceRoutes } from "./modules/ai/intelligence/intelligence.routes";
+import { skillsRoutes } from "./modules/ai/skills/skills.routes";
 
 import { realtimeSyncPlugin } from "./modules/realtime-sync/realtime.plugin";
 
@@ -27,6 +29,8 @@ export function buildApp(): FastifyInstance {
   app.register(attachmentsRoutes, { prefix: "/api" });
   app.register(activityRoutes, { prefix: "/api" });
   app.register(aiContextRoutes, { prefix: "/api/ai" });
+  app.register(intelligenceRoutes, { prefix: "/api/ai" });
+  app.register(skillsRoutes, { prefix: "/api/ai/skills" });
 
   return app;
 }

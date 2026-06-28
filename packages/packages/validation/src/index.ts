@@ -5,3 +5,5 @@ export * from "./column.schemas.js";
 export * from "./project.schemas.js";
 export * from "./collaboration.schemas.js";
 export * from "./workitem.schemas.js";
+export * from "./ai-skills.schemas.js";
+export * from "./intelligence.schemas.js";

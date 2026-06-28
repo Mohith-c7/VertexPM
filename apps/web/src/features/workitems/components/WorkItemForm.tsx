@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { WorkItemStatus, WorkItemPriority, WorkItemType } from '../types';
+import { AiInlineEditor } from '../../ai/components/ai-inline-editor';
 
 const workItemSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100),
@@ -28,7 +29,7 @@ interface WorkItemFormProps {
 }
 
 export const WorkItemForm = ({ initialValues, onSubmit, onCancel }: WorkItemFormProps) => {
-  const { register, handleSubmit, control, formState: { errors } } = useHookForm<WorkItemFormValues>({
+  const { register, handleSubmit, control, watch, setValue, formState: { errors } } = useHookForm<WorkItemFormValues>({
     resolver: zodResolver(workItemSchema),
     defaultValues: {
       title: initialValues?.title || '',
@@ -57,9 +58,9 @@ export const WorkItemForm = ({ initialValues, onSubmit, onCancel }: WorkItemForm
 
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
-          <textarea
-            {...register('description')}
-            className="w-full min-h-[100px] p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+          <AiInlineEditor
+            value={watch('description') || ''}
+            onChange={(val) => setValue('description', val, { shouldValidate: true })}
             placeholder="Description..."
           />
         </div>
