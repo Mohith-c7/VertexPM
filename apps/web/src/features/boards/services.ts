@@ -1,5 +1,5 @@
 import { api } from '@/lib/api';
-import { Board, CreateBoardInput, UpdateBoardInput, Column, CreateColumnInput, UpdateColumnInput } from './types';
+import { Board, CreateBoardInput, UpdateBoardInput, Column, CreateColumnInput, UpdateColumnInput, WorkItem, UpdateWorkItemInput } from './types';
 
 export const boardService = {
   getBoards: async (workspaceId: string, projectId: string): Promise<Board[]> => {
@@ -39,5 +39,16 @@ export const boardService = {
 
   deleteColumn: async (workspaceId: string, projectId: string, boardId: string, columnId: string): Promise<void> => {
     await api.delete(`/columns/${columnId}`);
+  },
+
+  // WorkItem operations
+  getWorkItems: async (boardId: string): Promise<WorkItem[]> => {
+    const response = await api.get(`/boards/${boardId}/work-items`);
+    return response.data;
+  },
+
+  updateWorkItemStatus: async (workItemId: string, data: UpdateWorkItemInput): Promise<WorkItem> => {
+    const response = await api.patch(`/work-items/${workItemId}/status`, data);
+    return response.data;
   }
 };

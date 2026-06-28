@@ -30,3 +30,31 @@ export interface UpdateColumnInput {
   name?: string;
   order?: number;
 }
+
+export type WorkItemType = 'epic' | 'story' | 'task' | 'bug';
+export type WorkItemPriority = 'low' | 'medium' | 'high' | 'urgent';
+
+export interface WorkItem {
+  id: string;
+  title: string;
+  type: WorkItemType;
+  priority: WorkItemPriority;
+  statusId: string; // references column id
+  boardId: string;
+  assignee?: {
+    id: string;
+    name: string;
+    avatarUrl?: string;
+  };
+  labels?: {
+    id: string;
+    name: string;
+    color: string;
+  }[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UpdateWorkItemInput {
+  statusId?: string;
+}

@@ -2,3 +2,9 @@
 > web@0.1.0 lint D:\VertexPM\apps\web
 > eslint src --ext .ts,.tsx
 
+
+D:\VertexPM\apps\web\src\features\kanban\components\WorkItemCard.tsx
+  92:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+✖ 1 problem (0 errors, 1 warning)
+
