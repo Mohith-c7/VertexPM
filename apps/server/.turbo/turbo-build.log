@@ -2,5 +2,3 @@
 > server@1.0.0 build D:\VertexPM\apps\server
 > tsc -p tsconfig.json
 
-src/modules/auth/auth.service.ts(69,14): error TS18004: No value exists in scope for the shorthand property 'tokenHash'. Either declare one or provide an initializer.
- ELIFECYCLE  Command failed with exit code 2.
