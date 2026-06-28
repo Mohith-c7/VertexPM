@@ -9,7 +9,7 @@ function generateSlug(name: string) {
 
 export class WorkspacesService {
   async createWorkspace(data: CreateWorkspaceInput, userId: string) {
-    const slug = generateSlug(data.name);
+    const slug = data.slug || generateSlug(data.name);
     const workspace = await repository.createWorkspace({
       ...data,
       slug,

@@ -2,13 +2,15 @@ import { z } from 'zod';
 
 export const createWorkspaceSchema = z.object({
   name: z.string().min(3).max(60),
-  description: z.string().optional(),
+  slug: z.string().optional(),
+  description: z.string().max(500).optional(),
   icon: z.string().optional(),
 });
 
 export const updateWorkspaceSchema = z.object({
   name: z.string().min(3).max(60).optional(),
-  description: z.string().optional(),
+  slug: z.string().optional(),
+  description: z.string().max(500).optional(),
   icon: z.string().optional(),
 });
 
