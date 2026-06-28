@@ -39,7 +39,7 @@ export interface WorkItem {
   title: string;
   type: WorkItemType;
   priority: WorkItemPriority;
-  statusId: string; // references column id
+  columnId: string; // references column id
   boardId: string;
   assignee?: {
     id: string;
@@ -56,5 +56,5 @@ export interface WorkItem {
 }
 
 export interface UpdateWorkItemInput {
-  statusId?: string;
+  columnId?: string;
 }

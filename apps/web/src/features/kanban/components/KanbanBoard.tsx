@@ -115,7 +115,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ boardId, projectId, wo
               <KanbanColumn
                 key={column.id}
                 column={column}
-                items={workItems.filter(item => item.statusId === column.id)}
+                items={workItems.filter(item => item.columnId === column.id)}
                 onOpenWorkItem={onOpenWorkItem}
                 isLoading={isLoading}
               />
