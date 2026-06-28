@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/features/auth/providers/AuthProvider";
 import { ToastProvider } from "@/providers/ToastProvider";
 import { WorkItemDrawerProvider, WorkItemDrawer } from "@/features/workitems";
+import { RealtimeProvider } from "@/services/realtime";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,10 +34,12 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ToastProvider>
           <AuthProvider>
-            <WorkItemDrawerProvider>
-              {children}
-              <WorkItemDrawer />
-            </WorkItemDrawerProvider>
+            <RealtimeProvider>
+              <WorkItemDrawerProvider>
+                {children}
+                <WorkItemDrawer />
+              </WorkItemDrawerProvider>
+            </RealtimeProvider>
           </AuthProvider>
         </ToastProvider>
       </body>

@@ -8,8 +8,12 @@ import { commentsRoutes } from "./modules/comments/comments.routes";
 import { attachmentsRoutes } from "./modules/attachments/attachments.routes";
 import { activityRoutes } from "./modules/activity/activity.routes";
 
+import { realtimeSyncPlugin } from "./modules/realtime-sync/realtime.plugin";
+
 export function buildApp(): FastifyInstance {
   const app = fastify({ logger: true });
+
+  app.register(realtimeSyncPlugin);
 
   app.get("/health", async () => ({ status: "ok" }));
 

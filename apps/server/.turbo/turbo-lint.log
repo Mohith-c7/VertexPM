@@ -3,10 +3,15 @@
 > eslint .
 
 
+D:\VertexPM\apps\server\src\modules\realtime\connection-manager.ts
+   8:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  21:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  65:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
 D:\VertexPM\apps\server\src\modules\workspaces\workspaces.service.ts
   18:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
   42:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
   53:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
 
-✖ 3 problems (0 errors, 3 warnings)
+✖ 6 problems (0 errors, 6 warnings)
 

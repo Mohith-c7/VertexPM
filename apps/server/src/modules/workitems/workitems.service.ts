@@ -1,18 +1,29 @@
 import { workItemRepository } from "./workitems.repository";
 import { CreateWorkItemInput, UpdateWorkItemInput, QueryWorkItemsInput } from "@vertexpm/validation";
 import { Prisma } from "@prisma/client";
+import { realtimeDispatcher } from "../realtime-sync";
 
 export class WorkItemService {
   async createWorkItem(boardId: string, reporterId: string, input: CreateWorkItemInput, parentId?: string) {
     const position = input.position ?? (await workItemRepository.getMaxPosition(boardId, input.columnId)) + 1024;
     
-    return workItemRepository.create({
+    const item = await workItemRepository.create({
       ...input,
       boardId,
       reporterId,
       position,
       parentId,
     });
+    
+    realtimeDispatcher.dispatch({
+      event: "workitem.created",
+      boardId,
+      entityId: item.id,
+      actor: { id: reporterId },
+      payload: item
+    });
+    
+    return item;
   }
 
   async getWorkItems(boardId: string, query: QueryWorkItemsInput) {
@@ -67,11 +78,29 @@ export class WorkItemService {
   async updateWorkItem(id: string, input: UpdateWorkItemInput) {
     // If columnId is changed, we should ideally handle position logic here.
     // For simplicity, we just pass the input.
-    return workItemRepository.update(id, input);
+    const updated = await workItemRepository.update(id, input);
+    
+    realtimeDispatcher.dispatch({
+      event: "workitem.updated",
+      boardId: updated.boardId,
+      entityId: updated.id,
+      payload: updated
+    });
+    
+    return updated;
   }
 
   async deleteWorkItem(id: string) {
-    return workItemRepository.softDelete(id);
+    const deleted = await workItemRepository.softDelete(id);
+    
+    realtimeDispatcher.dispatch({
+      event: "workitem.deleted",
+      boardId: deleted.boardId,
+      entityId: id,
+      payload: { id }
+    });
+    
+    return deleted;
   }
   
   async getSubtasks(id: string) {

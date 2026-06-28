@@ -1,6 +1,7 @@
 import { CommentsRepository } from "./comments.repository";
 import { CreateCommentInput, UpdateCommentInput, GetCommentsQueryInput } from "@vertexpm/validation";
 import { activityService } from "../activity/activity.service";
+import { realtimeDispatcher } from "../realtime-sync";
 
 const repository = new CommentsRepository();
 
@@ -19,6 +20,13 @@ export class CommentsService {
       entityId: comment.id,
       workItemId: workItemId,
       metadata: JSON.stringify({ content: comment.content.substring(0, 100) })
+    });
+    
+    realtimeDispatcher.dispatch({
+      event: "comment.created",
+      entityId: comment.id,
+      actor: { id: userId },
+      payload: comment
     });
     
     return comment;
@@ -58,6 +66,13 @@ export class CommentsService {
       workItemId: comment.workItemId,
     });
     
+    realtimeDispatcher.dispatch({
+      event: "comment.updated",
+      entityId: updated.id,
+      actor: { id: userId },
+      payload: updated
+    });
+    
     return updated;
   }
 
@@ -74,6 +89,13 @@ export class CommentsService {
       entityType: 'Comment',
       entityId: id,
       workItemId: comment.workItemId,
+    });
+    
+    realtimeDispatcher.dispatch({
+      event: "comment.deleted",
+      entityId: id,
+      actor: { id: userId },
+      payload: { id }
     });
     
     return true;
