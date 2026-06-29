@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import {
   LayoutDashboard,
   KanbanSquare,
@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Zap,
+  Sparkles,
 } from "lucide-react";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
@@ -20,10 +21,12 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   const pathname = usePathname();
+  const params = useParams() as { id?: string; projectId?: string };
 
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Boards", href: "/boards", icon: KanbanSquare },
+    ...(params.id && params.projectId ? [{ name: "AI Insights", href: `/workspaces/${params.id}/projects/${params.projectId}/insights`, icon: Sparkles }] : []),
     { name: "Automation", href: "/settings/automation", icon: Zap },
     { name: "Settings", href: "/settings", icon: Settings },
   ];

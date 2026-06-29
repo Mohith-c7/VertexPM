@@ -14,6 +14,7 @@ import { searchRoutes } from "./modules/search/search.routes";
 import { filterRoutes } from "./modules/filter/filter.routes";
 import { notificationsRoutes } from "./modules/notifications/notifications.routes";
 import { automationRoutes } from "./modules/automation/automation.routes";
+import { labelsRoutes } from "./modules/labels/labels.routes";
 
 import { realtimeSyncPlugin } from "./modules/realtime-sync/realtime.plugin";
 import { automationEngine } from "./modules/automation/engine/automation.engine";
@@ -42,6 +43,7 @@ export function buildApp(): FastifyInstance {
   app.register(filterRoutes, { prefix: "/api/filters" });
   app.register(notificationsRoutes, { prefix: "/api/notifications" });
   app.register(automationRoutes, { prefix: "/api/automation" });
+  app.register(labelsRoutes, { prefix: "/api" });
 
   // Start automation and scheduler engines
   automationEngine.start();

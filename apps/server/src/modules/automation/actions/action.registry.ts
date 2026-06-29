@@ -132,8 +132,49 @@ export class ActionRegistry {
     this.register({
       type: "ADD_LABEL",
       execute: async (ctx, config) => {
-        // Label is not in the Prisma schema for WorkItem, so we log it
-        automationLogger.info("ActionRegistry", `ADD_LABEL action executed (No-op/Log): added label "${config.label || config.value}" to ${ctx.entityType} ${ctx.entityId}`);
+        if (ctx.entityType !== "WorkItem") return;
+        const labelName = config.label || config.value;
+        if (!labelName) return;
+
+        // 1. Find or create the label in this workspace
+        let label = await db.label.findUnique({
+          where: {
+            workspaceId_name: {
+              workspaceId: ctx.workspaceId,
+              name: labelName,
+            },
+          },
+        });
+
+        if (!label) {
+          label = await db.label.create({
+            data: {
+              workspaceId: ctx.workspaceId,
+              name: labelName,
+              color: "#3B82F6", // Default blue color
+            },
+          });
+        }
+
+        // 2. Link it to the WorkItem
+        try {
+          await db.workItemLabel.upsert({
+            where: {
+              workItemId_labelId: {
+                workItemId: ctx.entityId,
+                labelId: label.id,
+              },
+            },
+            create: {
+              workItemId: ctx.entityId,
+              labelId: label.id,
+            },
+            update: {},
+          });
+          automationLogger.info("ActionRegistry", `ADD_LABEL action executed: added label "${labelName}" to WorkItem ${ctx.entityId}`);
+        } catch (err: any) {
+          automationLogger.error("ActionRegistry", `Failed to add label "${labelName}" to WorkItem ${ctx.entityId}: ${err.message}`);
+        }
       },
     });
 
@@ -141,7 +182,34 @@ export class ActionRegistry {
     this.register({
       type: "REMOVE_LABEL",
       execute: async (ctx, config) => {
-        automationLogger.info("ActionRegistry", `REMOVE_LABEL action executed (No-op/Log): removed label "${config.label || config.value}" from ${ctx.entityType} ${ctx.entityId}`);
+        if (ctx.entityType !== "WorkItem") return;
+        const labelName = config.label || config.value;
+        if (!labelName) return;
+
+        const label = await db.label.findUnique({
+          where: {
+            workspaceId_name: {
+              workspaceId: ctx.workspaceId,
+              name: labelName,
+            },
+          },
+        });
+
+        if (!label) return;
+
+        try {
+          await db.workItemLabel.delete({
+            where: {
+              workItemId_labelId: {
+                workItemId: ctx.entityId,
+                labelId: label.id,
+              },
+            },
+          });
+          automationLogger.info("ActionRegistry", `REMOVE_LABEL action executed: removed label "${labelName}" from WorkItem ${ctx.entityId}`);
+        } catch (err: any) {
+          automationLogger.debug("ActionRegistry", `REMOVE_LABEL action no-op or failed: ${err.message}`);
+        }
       },
     });
 

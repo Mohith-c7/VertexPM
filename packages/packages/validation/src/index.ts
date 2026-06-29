@@ -11,3 +11,4 @@ export * from "./search.schemas.js";
 export * from "./filter.schemas.js";
 export * from "./notification.schemas.js";
 export * from "./automation.schemas.js";
+export * from "./label.schemas.js";

@@ -5,15 +5,15 @@
 ▲ Next.js 16.2.9 (Turbopack)
 
   Creating an optimized production build ...
-✓ Compiled successfully in 6.4s
+✓ Compiled successfully in 5.7s
   Running TypeScript ...
-  Finished TypeScript in 14.6s ...
+  Finished TypeScript in 11.3s ...
   Collecting page data using 11 workers ...
   Generating static pages using 11 workers (0/8) ...
   Generating static pages using 11 workers (2/8) 
   Generating static pages using 11 workers (4/8) 
   Generating static pages using 11 workers (6/8) 
-✓ Generating static pages using 11 workers (8/8) in 370ms
+✓ Generating static pages using 11 workers (8/8) in 561ms
   Finalizing page optimization ...
 
 Route (app)
@@ -25,7 +25,8 @@ Route (app)
 ├ ○ /signup
 ├ ƒ /workspaces/[id]/projects
 ├ ƒ /workspaces/[id]/projects/[projectId]
-└ ƒ /workspaces/[id]/projects/[projectId]/boards/[boardId]
+├ ƒ /workspaces/[id]/projects/[projectId]/boards/[boardId]
+└ ƒ /workspaces/[id]/projects/[projectId]/insights
 
 
 ○  (Static)   prerendered as static content

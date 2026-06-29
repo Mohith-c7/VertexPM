@@ -65,11 +65,15 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
         components={{
           code: CodeBlock,
           p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
-          a: ({ children, href }) => (
-            <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-              {children}
-            </a>
-          ),
+          a: ({ children, href }) => {
+            const isSafe = href && !href.toLowerCase().startsWith('javascript:') && !href.toLowerCase().startsWith('data:');
+            const safeHref = isSafe ? href : '#';
+            return (
+              <a href={safeHref} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                {children}
+              </a>
+            );
+          },
           ul: ({ children }) => <ul className="list-disc pl-4 mb-4">{children}</ul>,
           ol: ({ children }) => <ol className="list-decimal pl-4 mb-4">{children}</ol>,
           li: ({ children }) => <li className="mb-1">{children}</li>,

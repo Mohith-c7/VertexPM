@@ -3,6 +3,28 @@ import type { GlobalSearchQuery } from "@vertexpm/validation";
 import type { SearchProvider } from "./provider.interface";
 import type { SearchResponse, GroupedSearchResults, SearchResultItem } from "../types";
 
+
+function calculateRelevance(title: string, desc: string, query: string): number {
+  const q = query.toLowerCase();
+  const t = title.toLowerCase();
+  const d = (desc || '').toLowerCase();
+  let score = 0;
+  if (t === q) score += 20;
+  else if (t.startsWith(q)) score += 15;
+  else if (t.includes(q)) score += 10;
+  
+  if (d.includes(q)) score += 3;
+  
+  const terms = q.split(/\s+/);
+  for (const term of terms) {
+    if (term.length > 1) {
+      if (t.includes(term)) score += 2;
+      if (d.includes(term)) score += 0.5;
+    }
+  }
+  return score || 1;
+}
+
 export class PostgresSearchProvider implements SearchProvider {
   constructor(private prisma: PrismaClient) {}
 
