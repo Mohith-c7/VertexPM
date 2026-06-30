@@ -67,7 +67,7 @@ export function NotificationPreferences({ onBack, onClose }: NotificationPrefere
     const currentWsPrefs = preferences.workspacePreferences || [];
     const existingIdx = currentWsPrefs.findIndex((w) => w.workspaceId === selectedWorkspaceId);
     
-    let updatedWsPrefs = [...currentWsPrefs];
+    const updatedWsPrefs = [...currentWsPrefs];
     if (existingIdx > -1) {
       updatedWsPrefs[existingIdx] = {
         ...updatedWsPrefs[existingIdx],

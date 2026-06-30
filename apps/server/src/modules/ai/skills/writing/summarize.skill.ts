@@ -18,7 +18,7 @@ Respond ONLY with a valid JSON object matching this schema:
     const response = await AIGateway.generateDirect(prompt, options);
     
     try {
-      const match = response.content.match(/\`\`\`json\n([\s\S]*?)\n\`\`\`/);
+      const match = response.content.match(/```json\n([\s\S]*?)\n```/);
       const jsonStr = match ? match[1] : response.content.trim();
       return JSON.parse(jsonStr);
     } catch (e) {

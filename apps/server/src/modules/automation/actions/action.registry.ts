@@ -32,7 +32,7 @@ export class ActionRegistry {
     this.register({
       type: "CREATE_NOTIFICATION",
       execute: async (ctx, config) => {
-        let recipientIds: string[] = [];
+        const recipientIds: string[] = [];
         if (config.recipientId) {
           if (config.recipientId === "assignee" || config.recipientId === "reporter") {
             const item = await this.loadWorkItem(ctx.entityId);

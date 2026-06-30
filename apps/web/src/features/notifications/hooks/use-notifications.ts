@@ -94,7 +94,6 @@ export function useNotifications() {
   useEffect(() => {
     loadNotifications(true);
     loadUnreadCount();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   // Reload on filter change
