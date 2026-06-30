@@ -14,17 +14,17 @@ This repository provides a scalable foundation for:
 
 ## Architecture
 
-- Apps:
-  - apps/web for the user-facing experience
-  - apps/server for backend services and APIs
-  - apps/extension for the browser extension shell
-- Packages:
-  - packages/ui for shared UI primitives
-  - packages/types for shared domain types
-  - packages/validation for shared input validation
-  - packages/utils for reusable helpers
-  - packages/config for workspace defaults
-  - packages/eslint-config for shared lint rules
+- **Apps** (`apps/`):
+  - [apps/web](file:///d:/VertexPM/apps/web) for the user-facing Next.js experience
+  - [apps/server](file:///d:/VertexPM/apps/server) for the backend services and Fastify APIs
+  - [apps/extension](file:///d:/VertexPM/apps/extension) for the browser extension shell
+- **Shared Packages** (`packages/packages/`):
+  - [packages/packages/ui](file:///d:/VertexPM/packages/packages/ui) for shared UI primitives
+  - [packages/packages/types](file:///d:/VertexPM/packages/packages/types) for shared domain types
+  - [packages/packages/validation](file:///d:/VertexPM/packages/packages/validation) for shared input validation
+  - [packages/packages/utils](file:///d:/VertexPM/packages/packages/utils) for reusable helpers
+  - [packages/packages/config](file:///d:/VertexPM/packages/packages/config) for workspace defaults
+  - [packages/packages/eslint-config](file:///d:/VertexPM/packages/packages/eslint-config) for shared lint rules
 
 ## Tech Stack
 
@@ -40,28 +40,44 @@ This repository provides a scalable foundation for:
 
 1. Install pnpm if needed.
 2. Install dependencies:
-   - pnpm install
+   ```bash
+   pnpm install
+   ```
 3. Start the development workspace:
-   - pnpm dev
+   ```bash
+   pnpm dev
+   ```
 4. Start individual services:
-   - pnpm dev:web
-   - pnpm dev:server
-   - pnpm dev:extension
+   - Web: `pnpm dev:web`
+   - Server: `pnpm dev:server`
+   - Extension: `pnpm dev:extension`
+
+## Testing
+
+VertexPM includes unit and strict E2E API integration testing suites:
+- Run tests:
+  ```bash
+  pnpm --filter server test
+  ```
 
 ## Repository Structure
 
-- apps/ for runnable applications
-- packages/ for shared libraries and configuration
-- docs/ for project documentation
-- prisma/ for Prisma setup and migrations
-- docker/ for containerization assets
-- scripts/ for developer utilities
-- .github/ for workflows and templates
+- `apps/` for runnable applications
+- `packages/` for shared libraries and configuration
+- `docs/` for project documentation
+- `prisma/` for Prisma setup and migrations
+- `docker/` for containerization assets
+- `scripts/` for developer utilities
+- `.github/` for workflows and templates
 
-## Roadmap
+## Project Progress & Roadmap
 
-- scaffold core apps and shared packages
-- add database schema and migrations
-- implement real-time collaboration features
-- connect AI providers and background jobs
-- prepare Railway deployment workflow
+- [x] Scaffold core apps and shared packages
+- [x] Add database schema and migrations (Prisma + PostgreSQL)
+- [x] Implement real-time collaboration features (Socket.IO)
+- [x] Connect AI providers (Gemini / OpenAI API) and background jobs (node-cron)
+- [x] Implement enterprise search, advanced filtering, and caching
+- [x] Add automated workflow scheduler and real-time events notifications
+- [x] Integrate Vitest unit and strict E2E API integration testing suites
+- [x] Prepare Railway deployment workflow
+
